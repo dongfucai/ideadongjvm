@@ -23,14 +23,14 @@ public class JvmDefaultClassLoader implements JvmClassLoader {
     }
 
     @Override
-    JvmClass loadClass(String className) throws ClassNotFoundException{
+    public JvmClass loadClass(String className) throws ClassNotFoundException{
 
         String fileName = className + "/" + className.replace(".","/")+".class";
 
         Path path = Paths.get(fileName);
 
         if (Files.exists(path)){ // 加载自己所写的类
-            return
+            return JvmOpcodeClass.read(this, path);
         }else {
 
         }

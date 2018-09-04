@@ -1,11 +1,9 @@
 package meituan.dong.jvm.opcode;
 
-import com.sun.tools.classfile.ClassFile;
-import com.sun.tools.classfile.ConstantPoolException;
-import com.sun.tools.classfile.Descriptor;
-import com.sun.tools.classfile.Method;
+import com.sun.tools.classfile.*;
 import meituan.dong.jvm.lang.JvmClass;
 import meituan.dong.jvm.lang.JvmClassLoader;
+import meituan.dong.jvm.lang.JvmField;
 import meituan.dong.jvm.lang.JvmObject;
 import meituan.dong.jvm.runtime.Env;
 
@@ -28,11 +26,12 @@ public class JvmOpcodeClass implements JvmClass {
      */
     private final ClassFile classFile;
     private final String className;
-
     private final JvmClassLoader classLoader;
 
+    // 方法的map
     private Map<Map.Entry<String, String>, JvmOpcodeMethod> methods = new HashMap<>();
-
+    // 字段的map
+    private Map<String, JvmField> fields = new HashMap<>();
 
     /**
      *  是否已经初始化
@@ -69,9 +68,25 @@ public class JvmOpcodeClass implements JvmClass {
             String desc = method.descriptor.getFieldType(classFile.constant_pool);
             methods.put(new AbstractMap.SimpleEntry<>(name,desc),new JvmOpcodeMethod(this,method));
         }
-
+        //准备阶段
+        prepare();
     }
 
+    /**
+     * 准备阶段（Preparation）
+     * 分配静态变量，并初始化为默认值，但不会执行任何字节码，在初始化阶段（clinit) 会有显式的初始化器来初始化这些静态字段，所以准备阶段不做
+     * 这些事情。
+     * @see `http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-5.html#jvms-5.4.2`
+     */
+    private void prepare() throws ConstantPoolException, Descriptor.InvalidDescriptor {
+        for(Field i : this.classFile.fields){
+            if(i.access_flags.is(AccessFlags.ACC_STATIC)){
+                fields.put(i.getName(classFile.constant_pool), new JvmOpcodeStaticField(this, i));
+            }else{
+                fields.put(i.getName(classFile.constant_pool), new JvmOpcodeObjectField(this, i));
+            }
+        }
+    }
 
     public ClassFile getClassFile(){
         return classFile;

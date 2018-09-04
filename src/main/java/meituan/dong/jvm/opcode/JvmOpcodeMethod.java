@@ -14,7 +14,7 @@ import meituan.dong.jvm.lang.JvmMethod;
  */
 
 /**
- * 字节码中的方法 （不同意native的方法）
+ * 字节码中的方法 （不同于native的方法）
  */
 public class JvmOpcodeMethod implements JvmMethod {
 
@@ -42,9 +42,16 @@ public class JvmOpcodeMethod implements JvmMethod {
         this.name = method.getName(clazz.getClassFile().constant_pool);
         this.parameterCount = method.descriptor.getParameterCount(clazz.getClassFile().constant_pool);
         this.codeAttribute = (Code_attribute)method.attributes.get("Code");
-
         opcodes = BytecodeInterpreter.parseCodes(codeAttribute.code);
+    }
 
+    @Override
+    public int getParameterCount(){
+        return parameterCount;
+    }
+    @Override
+    public String getName(){
+        return name;
     }
 
 
