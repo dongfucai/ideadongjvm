@@ -1,10 +1,7 @@
 package meituan.dong.jvm.opcode;
 
 import com.sun.tools.classfile.*;
-import meituan.dong.jvm.lang.JvmClass;
-import meituan.dong.jvm.lang.JvmClassLoader;
-import meituan.dong.jvm.lang.JvmField;
-import meituan.dong.jvm.lang.JvmObject;
+import meituan.dong.jvm.lang.*;
 import meituan.dong.jvm.runtime.Env;
 
 import java.io.IOException;
@@ -120,6 +117,13 @@ public class JvmOpcodeClass implements JvmClass {
 
     }
 
+    public JvmMethod getMethod(String name, String desc) throws NoSuchMethodException{
+        JvmOpcodeMethod opcodeMethod = methods.get(new AbstractMap.SimpleEntry<>(name, desc));
+        if(opcodeMethod == null){
+            throw new NoSuchMethodException("method "+name+":"+ desc+" not exist");
+        }
+        return opcodeMethod;
+    }
 
 
 

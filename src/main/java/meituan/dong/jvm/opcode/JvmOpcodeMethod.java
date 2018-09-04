@@ -5,6 +5,7 @@ import com.sun.tools.classfile.ConstantPoolException;
 import com.sun.tools.classfile.Descriptor;
 import com.sun.tools.classfile.Method;
 import meituan.dong.jvm.lang.JvmMethod;
+import meituan.dong.jvm.runtime.Env;
 
 /**
  * @Package Name : ${PACKAG_NAME}
@@ -52,6 +53,13 @@ public class JvmOpcodeMethod implements JvmMethod {
     @Override
     public String getName(){
         return name;
+    }
+
+    @Override
+    void call(Env env, Object thiz, Object ...args) throws Exception{
+
+
+
     }
 
 

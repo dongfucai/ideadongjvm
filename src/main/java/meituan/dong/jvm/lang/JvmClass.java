@@ -4,7 +4,7 @@ import meituan.dong.jvm.runtime.Env;
 
 /**
  * @Package Name : ${PACKAG_NAME}
- * @Author : dongfucai@meituan.com
+ * @Author : 1766318593@qq.com
  * @Creation Date : 2018年08月28日下午4:52
  * @Function : todo
  */
@@ -30,4 +30,14 @@ public interface JvmClass {
      *  返回类名字
      */
     public String getName();
+
+
+    /**
+     * 获取方法
+     * @param name 方法名，如`main`
+     * @param desc 方法类型描述，如`([Ljava/lang/String;)V`
+     * @return
+     * @throws NoSuchMethodException
+     */
+    public JvmMethod getMethod(String name, String desc) throws NoSuchMethodException;
 }

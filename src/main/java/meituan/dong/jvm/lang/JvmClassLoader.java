@@ -2,7 +2,7 @@ package meituan.dong.jvm.lang;
 
 /**
  * @Package Name : ${PACKAG_NAME}
- * @Author : dongfucai@meituan.com
+ * @Author : 1766318593@qq.com
  * @Creation Date : 2018年08月28日下午4:51
  * @Function : todo
  */
