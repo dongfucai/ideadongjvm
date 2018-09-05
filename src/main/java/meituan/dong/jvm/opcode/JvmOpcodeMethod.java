@@ -6,10 +6,11 @@ import com.sun.tools.classfile.Descriptor;
 import com.sun.tools.classfile.Method;
 import meituan.dong.jvm.lang.JvmMethod;
 import meituan.dong.jvm.runtime.Env;
+import meituan.dong.jvm.runtime.StackFrame;
 
 /**
  * @Package Name : ${PACKAG_NAME}
- * @Author : dongfucai@meituan.com
+ * @Author : 1766318593@qq.com
  * @Creation Date : 2018年08月28日下午9:28
  * @Function : 字节码中的方法
  */
@@ -55,10 +56,26 @@ public class JvmOpcodeMethod implements JvmMethod {
         return name;
     }
 
+    /**
+     * 解析方法执行的字节码
+     * @param env
+     * @param thiz
+     * @param args
+     * @throws Exception
+     */
     @Override
     void call(Env env, Object thiz, Object ...args) throws Exception{
 
+        // 每次的方法调用都会产生一个新的栈帧，当前的方法返回后，将栈帧设置已经返回，ByteCodeInterpreter.run 会检查到返回后，将栈帧进行
+        // 出帧栈，并将函数的返回值（如果有）押入上一个栈帧的操作数栈帧
 
+        StackFrame frame = env.getStack().newFrame(  // 每次一个函数调用  都会产生一个 建立了一个新的栈帧
+                clazz,
+                this,
+                clazz.getClassFile().constant_pool,
+                opcodes,
+                codeAttribute.max_locals,
+                codeAttribute.max_stack);
 
     }
 
