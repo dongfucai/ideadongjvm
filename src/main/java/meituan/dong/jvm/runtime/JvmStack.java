@@ -13,6 +13,10 @@ package meituan.dong.jvm.runtime;
 
 public class JvmStack {
 
+    private SlotsStack<StackFrame> frames = new SlotsStack<>(1024);
+
+    private boolean running = false;
+
 
 
     public static void main(String[] args) {
