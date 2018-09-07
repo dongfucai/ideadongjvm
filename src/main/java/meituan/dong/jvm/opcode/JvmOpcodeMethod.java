@@ -1,11 +1,9 @@
 package meituan.dong.jvm.opcode;
 
-import com.sun.tools.classfile.Code_attribute;
-import com.sun.tools.classfile.ConstantPoolException;
-import com.sun.tools.classfile.Descriptor;
-import com.sun.tools.classfile.Method;
+import com.sun.tools.classfile.*;
 import meituan.dong.jvm.lang.JvmMethod;
 import meituan.dong.jvm.runtime.Env;
+import meituan.dong.jvm.runtime.Slots;
 import meituan.dong.jvm.runtime.StackFrame;
 
 /**
@@ -64,7 +62,7 @@ public class JvmOpcodeMethod implements JvmMethod {
      * @throws Exception
      */
     @Override
-    void call(Env env, Object thiz, Object ...args) throws Exception{
+    public void call(Env env, Object thiz, Object ...args) throws Exception{
 
         // 每次的方法调用都会产生一个新的栈帧，当前的方法返回后，将栈帧设置已经返回，ByteCodeInterpreter.run 会检查到返回后，将栈帧进行
         // 出帧栈，并将函数的返回值（如果有）押入上一个栈帧的操作数栈帧
@@ -76,6 +74,31 @@ public class JvmOpcodeMethod implements JvmMethod {
                 opcodes,
                 codeAttribute.max_locals,
                 codeAttribute.max_stack);
+
+        /**
+         *  java 虚拟机使用局部变量表 来完成方法调用时候的参数传递，当一个方法调用的时候，它的 参数将会传至 从 0 开始的连续的局部变量表的位置
+         *  。 特别的，当一个实例方法被调用的时候，第 0 个局部变量一定是用来存储被调用的实例方法所在对象的引用（即 Java 语言中的“this” 指针）
+         *   后续的其他参数将会传递至从 1 开始的连续的局部变量表位置上。
+         */
+
+        // 初始化局部变量表
+        Slots<Object> locals = frame.getLocalVariables();
+        int pos = 0;
+        if(!method.access_flags.is(AccessFlags.ACC_STATIC)){
+            locals.set(0, thiz, 1);
+            pos++;
+        }
+
+        for (Object arg : args) {
+            locals.set(pos++, arg, 1);
+        }
+
+
+        // 执行方法前确保类已经初始化
+        clazz.clinit(env);
+
+
+
 
     }
 

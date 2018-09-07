@@ -117,6 +117,28 @@ public class JvmOpcodeClass implements JvmClass {
 
     }
 
+
+    /**
+     * 初始化阶段（Initialization）
+     * 调用类的<clinit>方法（如果有）
+     * @see `http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-5.html#jvms-5.5`
+     */
+    public void clinit(Env env) throws Exception {
+        if(inited){
+            return;
+        }
+        synchronized(this){
+            if(inited){
+                return;
+            }
+            inited = true;
+            JvmOpcodeMethod method = methods.get(new AbstractMap.SimpleEntry<>("<clinit>", "()V"));
+            if(method != null){
+                method.call(env, null);
+            }
+        }
+    }
+
     public JvmMethod getMethod(String name, String desc) throws NoSuchMethodException{
         JvmOpcodeMethod opcodeMethod = methods.get(new AbstractMap.SimpleEntry<>(name, desc));
         if(opcodeMethod == null){

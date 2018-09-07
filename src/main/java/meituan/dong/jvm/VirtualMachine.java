@@ -62,7 +62,7 @@ public class VirtualMachine {
     public JvmClass getClass(String className) throws ClassNotFoundException{
         JvmClass found = methodArea.get(className);
         if (found == null){
-            found = classLoader.loadClass(className);
+            found = classLoader.loadClass(className);  // 加载对类 进行初始化，保护 类中的方法，静态变量
             methodArea.put(className, found);
         }
         return found;
