@@ -40,4 +40,19 @@ public interface JvmClass {
      * @throws NoSuchMethodException
      */
     public JvmMethod getMethod(String name, String desc) throws NoSuchMethodException;
+
+    /**
+     * 获取属性
+     * @param name 属性名
+     * @return
+     * @throws NoSuchFieldException
+     */
+    public JvmField getField(String name) throws NoSuchFieldException, IllegalAccessException;
+
+    /**
+     * 获取方法
+     * @param name 方法名，如`main`
+     * @param desc 方法类型描述，如`([Ljava/lang/String;)V`
+     */
+    public boolean hasMethod(String name, String desc);
 }

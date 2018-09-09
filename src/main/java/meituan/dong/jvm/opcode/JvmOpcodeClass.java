@@ -132,8 +132,9 @@ public class JvmOpcodeClass implements JvmClass {
                 return;
             }
             inited = true;
-            JvmOpcodeMethod method = methods.get(new AbstractMap.SimpleEntry<>("<clinit>", "()V"));
+            JvmOpcodeMethod method = methods.get(new AbstractMap.SimpleEntry<>("<clinit>", "()V")); //＜clinit＞（）方法是由编译器自动收集类中的所有类变量的赋值动作和静态语句块（static{}块）中的语句合并产生的
             if(method != null){
+                ////＜clinit＞（）方法是由编译器自动收集类中的所有类变量的赋值动作和静态语句块（static{}块）中的语句合并产生的
                 method.call(env, null);
             }
         }
@@ -146,8 +147,20 @@ public class JvmOpcodeClass implements JvmClass {
         }
         return opcodeMethod;
     }
+    // 根据字段的名字 获取 属性值
+    public JvmField getField(String name) throws NoSuchFieldException, IllegalAccessException{
+        JvmField field = fields.get(name);
+        if(field == null){
+            throw new NoSuchFieldException("field "+name+" of "+ className+" not exist");
+        }
+        return field;
+    }
 
-
+    @Override
+    public boolean hasMethod(String name, String desc){
+        JvmOpcodeMethod method = methods.get(new AbstractMap.SimpleEntry<>(name, desc));
+        return method != null;
+    }
 
     public static void main(String[] args) {
 

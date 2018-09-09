@@ -97,9 +97,7 @@ public class JvmOpcodeMethod implements JvmMethod {
         // 执行方法前确保类已经初始化
         clazz.clinit(env);
 
-
-
-
+        BytecodeInterpreter.run(env);
     }
 
 

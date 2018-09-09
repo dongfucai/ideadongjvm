@@ -46,7 +46,7 @@ public class JvmStack {
     public StackFrame popFrame(){
         return frames.pop();
     }
-    public boolean isRunnning(){
+    public boolean isRunning(){
         return running;
     }
     public void setRunning(boolean running){
