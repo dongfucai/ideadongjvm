@@ -62,7 +62,8 @@ public class JvmOpcodeClass implements JvmClass {
 
         for (Method method : classFile.methods){
             String name = method.getName(classFile.constant_pool);
-            String desc = method.descriptor.getFieldType(classFile.constant_pool);
+            // String desc = method.descriptor.getFieldType(classFile.constant_pool);
+            String desc = method.descriptor.getValue(classFile.constant_pool);
             methods.put(new AbstractMap.SimpleEntry<>(name,desc),new JvmOpcodeMethod(this,method));
         }
         //准备阶段
@@ -143,7 +144,7 @@ public class JvmOpcodeClass implements JvmClass {
     public JvmMethod getMethod(String name, String desc) throws NoSuchMethodException{
         JvmOpcodeMethod opcodeMethod = methods.get(new AbstractMap.SimpleEntry<>(name, desc));
         if(opcodeMethod == null){
-            throw new NoSuchMethodException("method "+name+":"+ desc+" not exist");
+            throw new NoSuchMethodException("method="+name+",desc="+ desc+"  not exist");
         }
         return opcodeMethod;
     }
