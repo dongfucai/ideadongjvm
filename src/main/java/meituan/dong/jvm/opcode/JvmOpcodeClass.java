@@ -162,6 +162,14 @@ public class JvmOpcodeClass implements JvmClass {
         return method != null;
     }
 
+
+    /**
+     * 获取当前类的 class loader
+     * @return
+     */
+    public JvmClassLoader getClassLoader(){
+        return classLoader;
+    }
     public static void main(String[] args) {
 
     }

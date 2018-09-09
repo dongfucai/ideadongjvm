@@ -48,7 +48,7 @@ public class VirtualMachine {
      */
     public void run(String []args) throws Exception{
         Env env = new Env(this);
-        JvmClass clazz = methodArea.get(initialClass);
+        JvmClass clazz = getClass(initialClass);
 
         // 需要找到入口的方法  根据名称和描述
         JvmMethod method = clazz.getMethod(

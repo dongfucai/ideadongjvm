@@ -55,4 +55,12 @@ public interface JvmClass {
      * @param desc 方法类型描述，如`([Ljava/lang/String;)V`
      */
     public boolean hasMethod(String name, String desc);
+
+
+
+    /**
+     * 获取当前类的 class loader
+     * @return
+     */
+    public JvmClassLoader getClassLoader();
 }
