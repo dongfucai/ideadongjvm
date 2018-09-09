@@ -13,9 +13,8 @@ import java.util.Arrays;
 public class JJVM {
 
     public static void main(String[] args) {
-
-        String []strings = {"/Users/dongfucai/ideadongjvm/target/classes/meituan/dong/jvm","HelloWorld"};
-       // String []strings = {"/Users/dongfucai/Desktop/jjvm/target/classes/org/caoym/jjvm/sample2","Main"};
+        //String []strings = {"/Users/dongfucai/ideadongjvm/target/classes/meituan/dong/jvm","HelloWorld"};
+        String []strings = {"/Users/dongfucai/ideadongjvm/target/classes","meituan/dong/jvm/demo/Main"};
         VirtualMachine vm = new VirtualMachine(Paths.get(strings[0]), strings[1]);
         try {
             strings = Arrays.copyOfRange(strings, 2, strings.length);

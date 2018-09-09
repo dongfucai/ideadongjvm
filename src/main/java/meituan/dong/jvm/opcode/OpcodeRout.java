@@ -89,38 +89,69 @@ public enum  OpcodeRout{
             frame.getOperandStack().push(value, 1);
         }
     },
+//    /**
+//     * 调用超类构造方法，实例初始化方法，私有方法。
+//     */
+//    INVOKESPECIAL(Constants.INVOKESPECIAL){
+//        @Override
+//        public void invoke(Env env, StackFrame frame, byte[] oprands) throws Exception{
+//            int index = (oprands[0]<<8)|oprands[1];
+//            // CONSTANT_Methodref_info
+//            //CONSTANT_Methodref_info就是对一个字段的符号引用， 这个符号引用包括两部分，
+//            // 一部分是该方法所在的类， 另一部分是该方法的方法名和描述符。 这就是所谓的 “对方法的符号引用” 。
+//            ConstantPool.CONSTANT_Methodref_info info
+//                    = (ConstantPool.CONSTANT_Methodref_info)frame.getConstantPool().get(index);
+//
+//            //1 过去clazz
+//            JvmClass clazz = env.getVm().getClass(info.getClassName());
+//            //2 方法名称和类型描述
+//            JvmMethod method = clazz.getMethod(info.getNameAndTypeInfo().getName(),
+//                    info.getNameAndTypeInfo().getType());
+//
+//            // //从操作数栈中推出方法的参数
+//            ArrayList<Object> args = frame.getOperandStack().multiPop(method.getParameterCount()+1);
+//            Collections.reverse(args);
+//            Object[] argsArr = args.toArray();
+//            JvmObject thiz = (JvmObject) argsArr[0];
+//
+//            //根据类名确定是调用父类还是子类
+//            while (!thiz.getClazz().getName().equals(clazz.getName())){
+//                thiz.getSuper();
+//            }
+//            method.call(env, thiz, Arrays.copyOfRange(argsArr,1, argsArr.length));
+//        }
+//    },
+
     /**
      * 调用超类构造方法，实例初始化方法，私有方法。
      */
     INVOKESPECIAL(Constants.INVOKESPECIAL){
         @Override
-        public void invoke(Env env, StackFrame frame, byte[] oprands) throws Exception{
-            int index = (oprands[0]<<8)|oprands[1];
-            // CONSTANT_Methodref_info
-            //CONSTANT_Methodref_info就是对一个字段的符号引用， 这个符号引用包括两部分，
-            // 一部分是该方法所在的类， 另一部分是该方法的方法名和描述符。 这就是所谓的 “对方法的符号引用” 。
+        public void invoke(Env env, StackFrame frame, byte[] operands) throws Exception {
+            int arg = (operands[0]<<8)|operands[1];
+
             ConstantPool.CONSTANT_Methodref_info info
-                    = (ConstantPool.CONSTANT_Methodref_info)frame.getConstantPool().get(index);
+                    = (ConstantPool.CONSTANT_Methodref_info)frame.getConstantPool().get(arg);
 
-            //1 过去clazz
-            JvmClass clazz = env.getVm().getClass(info.getClassName());
-            //2 方法名称和类型描述
-            JvmMethod method = clazz.getMethod(info.getNameAndTypeInfo().getName(),
-                    info.getNameAndTypeInfo().getType());
-
-            // //从操作数栈中推出方法的参数
-            ArrayList<Object> args = frame.getOperandStack().multiPop(method.getParameterCount()+1);
+            JvmClass clazz  = env.getVm().getClass(info.getClassName());
+            JvmMethod method = clazz.getMethod(
+                    info.getNameAndTypeInfo().getName(),
+                    info.getNameAndTypeInfo().getType()
+            );
+            //从操作数栈中推出方法的参数
+            ArrayList<Object> args = frame.getOperandStack().multiPop(method.getParameterCount() + 1);
             Collections.reverse(args);
             Object[] argsArr = args.toArray();
             JvmObject thiz = (JvmObject) argsArr[0];
 
             //根据类名确定是调用父类还是子类
             while (!thiz.getClazz().getName().equals(clazz.getName())){
-                thiz.getSuper();
+                thiz = thiz.getSuper();
             }
             method.call(env, thiz, Arrays.copyOfRange(argsArr,1, argsArr.length));
         }
     },
+
     /**
      * 将int，float 或者 String 从常量池 推送至 栈顶
      */
