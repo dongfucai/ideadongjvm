@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * @Package Name : ${PACKAG_NAME}
- * @Author : dongfucai@meituan.com
+ * @Author : 1766318593@qq.com
  * @Creation Date : 2018年08月28日下午5:25
  * @Function :  字节码定义的java类
  */
@@ -54,17 +54,17 @@ public class JvmOpcodeClass implements JvmClass {
         }
     }
 
-
+    // 初始化Class 类
     private JvmOpcodeClass(JvmClassLoader classLoader, ClassFile classFile) throws ConstantPoolException, Descriptor.InvalidDescriptor {
         this.classFile = classFile;
         this.className = classFile.getName();
         this.classLoader = classLoader;
 
-        for (Method method : classFile.methods){
+        for (Method method : classFile.methods){ // 对class文件类中对方法进行 遍历
             String name = method.getName(classFile.constant_pool);
-            // String desc = method.descriptor.getFieldType(classFile.constant_pool);
+            // String desc = method.descriptor.getFieldType(classFile.constant_pool);// 这块写错了导致desc 错误
             String desc = method.descriptor.getValue(classFile.constant_pool);
-            methods.put(new AbstractMap.SimpleEntry<>(name,desc),new JvmOpcodeMethod(this,method));
+            methods.put(new AbstractMap.SimpleEntry<>(name,desc),new JvmOpcodeMethod(this,method));// 初始化对应对方法 只要是包括  方法名称和code属性
         }
         //准备阶段
         prepare();

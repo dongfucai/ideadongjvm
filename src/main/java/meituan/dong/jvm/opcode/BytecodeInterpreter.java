@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 /**
  * @Package Name : ${PACKAG_NAME}
- * @Author : dongfucai@meituan.com
+ * @Author : 1766318593@qq.com
  * @Creation Date : 2018年08月30日下午12:51
  * @Function : todo
  */
@@ -28,7 +28,7 @@ public class BytecodeInterpreter {
         for(int i=0; i<codes.length; i++){  // for 循环已经把当前栈帧的操作码 填充好了
             short code = (short)(0xff&codes[i]);
             final OpcodeRout route = OpcodeRout.valueOf(code);
-            // 字节码之后的字节数
+            // 字节码之后的 字节数 比如 索引的地址
             short noOfOperands = Constants.NO_OF_OPERANDS[code];
             byte[] operands = Arrays.copyOfRange(codes, i + 1, i + 1 + noOfOperands);
             opcodes.add(new OpcodeInvoker() {   //  自己可以想象 new了一个实现的类 真正函数调用的时候，才会调用ivoke

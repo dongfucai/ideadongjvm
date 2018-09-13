@@ -10,8 +10,9 @@ package meituan.dong.jvm;
 public class HelloWorld {
 
     public static void main(String[] args) {
-
-        System.out.println("welcome dongfucai you fisrst jvm");
+        int i = 2;
+        System.out.println(i);
+       // System.out.println("welcome dongfucai hello world");
     }
 
 }

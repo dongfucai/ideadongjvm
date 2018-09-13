@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * @Package Name : ${PACKAG_NAME}
- * @Author : dongfucai@meituan.com
+ * @Author : 1766318593@qq.com
  * @Creation Date : 2018年09月02日上午8:58
  * @Function : todo
  */
@@ -70,6 +70,7 @@ public enum  OpcodeRout{
     },
     /**
      * 获取对象的静态字段值
+     * getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
      */
     GETSTATIC(Constants.GETSTATIC){
         @Override
@@ -80,7 +81,7 @@ public enum  OpcodeRout{
             // 一部分是该字段所在的类， 另一部分是该字段的字段名和描述符。 这就是所谓的 “对字段的符号引用”
             ConstantPool.CONSTANT_Fieldref_info info = (ConstantPool.CONSTANT_Fieldref_info)frame.getConstantPool().get(index);
 
-            //  静态字段所在的类
+            //  静态字段所在的类 system
             JvmClass clazz = env.getVm().getClass(info.getClassName()); // 不存在这个类就去加载
             JvmField field = clazz.getField(info.getNameAndTypeInfo().getName());
 
@@ -124,6 +125,7 @@ public enum  OpcodeRout{
 
     /**
      * 调用超类构造方法，实例初始化方法，私有方法。
+     * 比如 invokevirtual #3                  // Method java/io/PrintStream.println:(I)V
      */
     INVOKESPECIAL(Constants.INVOKESPECIAL){
         @Override
@@ -133,7 +135,7 @@ public enum  OpcodeRout{
             ConstantPool.CONSTANT_Methodref_info info
                     = (ConstantPool.CONSTANT_Methodref_info)frame.getConstantPool().get(arg);
 
-            JvmClass clazz  = env.getVm().getClass(info.getClassName());
+            JvmClass clazz  = env.getVm().getClass(info.getClassName());// 不存在对应的类，就进行加载
             JvmMethod method = clazz.getMethod(
                     info.getNameAndTypeInfo().getName(),
                     info.getNameAndTypeInfo().getType()
@@ -406,7 +408,7 @@ public enum  OpcodeRout{
             ConstantPool.CONSTANT_Fieldref_info info
                     = (ConstantPool.CONSTANT_Fieldref_info)frame.getConstantPool().get(index);
 
-            JvmClass clazz = env.getVm().getClass(info.getClassName());
+            JvmClass clazz = env.getVm().getClass(info.getClassName()); // 没有这个类，就进行加载
             JvmField field = clazz.getField(info.getNameAndTypeInfo().getName());
             field.set(env, null, var);
         }
@@ -423,7 +425,7 @@ public enum  OpcodeRout{
             int index = (operands[0] << 8)| operands[1];
             ConstantPool.CONSTANT_Fieldref_info info
                     = (ConstantPool.CONSTANT_Fieldref_info)frame.getConstantPool().get(index);
-            JvmClass clazz = env.getVm().getClass(info.getClassName());
+            JvmClass clazz = env.getVm().getClass(info.getClassName());// 不存在对应的静态类，就进行加载
             JvmField field = clazz.getField(info.getNameAndTypeInfo().getName());
             assert field != null;
             field.set(env,objectref, value);
@@ -440,7 +442,7 @@ public enum  OpcodeRout{
             int index = (operands[0] << 8)| operands[1];
             ConstantPool.CONSTANT_Fieldref_info info
                     = (ConstantPool.CONSTANT_Fieldref_info)frame.getConstantPool().get(index);
-            JvmClass clazz = env.getVm().getClass(info.getClassName());
+            JvmClass clazz = env.getVm().getClass(info.getClassName()); // 不存在对应 静态累，就进行加载
             JvmField field = clazz.getField(info.getNameAndTypeInfo().getName());
             frame.getOperandStack().push(field.get(env, objectref));
         }
