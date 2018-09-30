@@ -3,7 +3,7 @@
 ideadongjvm
 
 
-**环境：idea + jdk8**
+**环境：idea + jdk8 + maven**
 
 代码中写了一个helloworld 
 
